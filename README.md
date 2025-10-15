@@ -1,1 +1,1 @@
-# PNP_Projekt
+# PNP-Projekt
