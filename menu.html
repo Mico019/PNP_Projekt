@@ -59,20 +59,10 @@
 <a class="menu-link" href="Glosar.html">Glossar</a>
 <a class="menu-link" href="zusatzverzeichnis.html">Zusatzverzeichnis</a>
 </nav>
-<!-- Lupe im Menü -->
-<button aria-label="Suche öffnen" class="search-toggle" id="toggle-search">🔍</button>
-<!-- Einklappbarer Suchbereich -->
-<div class="search-section hidden" id="search-section">
-<form class="search-form" id="site-search">
-<input autocomplete="off" id="searchInput" placeholder="Suchcode eingeben..." type="text"/>
-<button type="submit">Los</button>
-</form>
-<!-- Dropdown für Code-Verzeichnis -->
-<div class="dropdown code-dropdown">
-<button class="dropbtn">Code-Verzeichnis ▼</button>
-<div class="dropdown-content" id="code-list">
-<!-- Links werden per JS eingefügt -->
-</div>
+  
+<button id="toggle-search">🔍 Suche</button>
+<div id="search-section" class="hidden">
+  <input id="search-input" type="text" placeholder="Suche...">
 </div>
 </div>
 </header>
