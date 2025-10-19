@@ -1,4 +1,10 @@
+// =====================
+// Header.js (final)
+// =====================
 document.addEventListener("DOMContentLoaded", function() {
+  // -------------------------
+  // Menü laden
+  // -------------------------
   function loadMenu() {
     fetch("menu.html")
       .then(r => r.text())
@@ -10,13 +16,17 @@ document.addEventListener("DOMContentLoaded", function() {
           document.body.insertBefore(container, document.body.firstChild);
         }
         container.innerHTML = html;
-        enhanceMenu(container);  // <--- Menü erst JETZT im DOM!
-        initDropdowns();         // <--- Dropdowns und Suche erst hier aktivieren
-        initSearch();
+
+        enhanceMenu(container);
+        initDropdowns();
+        initSearch(); // Suche nach Menü-Ladevorgang aktivieren
       })
       .catch(e => console.error("Error loading menu.html:", e));
   }
 
+  // -------------------------
+  // Aktive Seite im Menü markieren
+  // -------------------------
   function enhanceMenu(container){
     try {
       var current = window.location.pathname.split("/").pop() || "index.html";
@@ -26,6 +36,9 @@ document.addEventListener("DOMContentLoaded", function() {
     } catch(e){}
   }
 
+  // -------------------------
+  // Dropdown-Menüs
+  // -------------------------
   function initDropdowns() {
     const dropdowns = document.querySelectorAll('.dropdown');
     dropdowns.forEach(drop => {
@@ -42,74 +55,33 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  // -------------------------
+  // 🔍 Suchleiste mit Autocomplete
+  // -------------------------
   function initSearch() {
-    const toggleSearchBtn = document.getElementById('toggle-search');
     const searchSection = document.getElementById('search-section');
-    if (!toggleSearchBtn || !searchSection) return;
+    const toggleSearchBtn = document.getElementById('toggle-search');
+    if (!searchSection || !toggleSearchBtn) return;
 
+    // Öffnen/Schließen der Suchleiste
     toggleSearchBtn.addEventListener('click', () => {
       searchSection.classList.toggle('hidden');
+      const input = document.getElementById("search-input");
+      if (input) input.focus();
     });
 
-    const publicCodes = {
-      "kapitel1": "Kapitel1.html",
-      "glossar": "Glosar.html",
-      "tutorial5": "Beispiel5.html#special"
-    };
+    const searchInput = document.getElementById("search-input");
+    if (!searchInput) return;
 
-const searchInput = document.getElementById("autocomplete-search-input");
-
-    const secretCodes = {
-      "geheim01": "secret64zeichen01.html",
-      "gmstart": "GM-Panel.html"
-    };
-
-    const ADMIN_PASSWORD = "admin-super-code";
-    let isAdmin = false;
-    const searchForm = document.getElementById('site-search');
-    const searchInput = document.getElementById('searchInput');
-    const codeList = document.getElementById('code-list');
-    if (!searchForm || !searchInput || !codeList) return;
-
-    Object.keys(publicCodes).forEach(code => {
-      const div = document.createElement('div');
-      div.textContent = code;
-      div.classList.add('code-item');
-      codeList.appendChild(div);
-    });
-
-    searchForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const code = searchInput.value.trim().toLowerCase();
-      if (code === ADMIN_PASSWORD) {
-        isAdmin = true;
-        alert("✅ Admin-Modus aktiviert!");
-        searchInput.value = '';
-        return;
-      }
-      if (publicCodes[code]) {
-        window.location.href = publicCodes[code];
-      } else if (isAdmin && secretCodes[code]) {
-        window.location.href = secretCodes[code];
-      } else {
-        alert('❌ Ungültiger Code');
-      }
-      searchInput.value = '';
-    });
-  }
-  
-  // === 🧠 Autocomplete-Suche (Optimierte Version) ===
-document.addEventListener("DOMContentLoaded", function () {
-  const searchInput = document.getElementById("search-input");
-  if (searchInput) {
+    // Autocomplete-Dropdown erzeugen
     const suggestionBox = document.createElement("div");
-    suggestionBox.classList.add("search-suggestions"); // Präfix hinzugefügt
+    suggestionBox.classList.add("search-suggestions");
     searchInput.parentNode.appendChild(suggestionBox);
 
+    // Eingabe -> Vorschläge anzeigen
     searchInput.addEventListener("input", function () {
       const query = this.value.toLowerCase();
       suggestionBox.innerHTML = "";
-
       if (query.length < 2) return;
 
       const results = searchIndex.filter(item =>
@@ -119,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       results.slice(0, 8).forEach(result => {
         const option = document.createElement("div");
-        option.classList.add("search-suggestion-item"); // Präfix hinzugefügt
+        option.classList.add("search-suggestion-item");
         option.textContent = result.title;
         option.onclick = () => (window.location.href = result.url);
         suggestionBox.appendChild(option);
@@ -138,9 +110,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-});
 
+  // -------------------------
+  // 🔎 Dein Index (Beispiel — kannst erweitern)
+  // -------------------------
   const searchIndex = [
+
   // --- Kapitel 1 ---
   { title: "Kapitel 1 – Charaktererstellung", url: "Kapitel1.html#kapitel-1-charaktererstellung", keywords: ["charaktererstellung"] },
   { title: "1. Attribute festlegen", url: "Kapitel1.html#1-attribute-festlegen", keywords: ["attribute festlegen"] },
