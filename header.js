@@ -51,6 +51,12 @@ document.addEventListener("DOMContentLoaded", function() {
       searchSection.classList.toggle('hidden');
     });
 
+    const publicCodes = {
+      "kapitel1": "Kapitel1.html",
+      "glossar": "Glosar.html",
+      "tutorial5": "Beispiel5.html#special"
+    };
+
     // === 🔍 Globaler Suchindex (automatisch generiert) ===
 const searchIndex = [
   // --- Kapitel 1 ---
