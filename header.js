@@ -109,7 +109,7 @@ const searchIndex = [
   { title: "5. Reichweite", url: "Kapitel7.html#5-reichweite", keywords: ["reichweite"] },
   { title: "5. AP-Kosten", url: "Kapitel7.html#5-ap-kosten", keywords: ["ap","kosten"] },
 
-  { title: "Kapitel 8 – AP", url: "Kapitel8.html#kapitel-8-welt-und-regionen", keywords: ["welt","regionen","kapitel"] },
+  { title: "Kapitel 8 – AP", url: "Kapitel8.html#kapitel-8-dynamisches-aktionspunktsystem-ap-ruhe", keywords: ["acktions Punkte","AP"] },
   { title: "8.1 Geographie", url: "Kapitel8.html#8-1-geographie", keywords: ["geographie"] },
   { title: "8.2 Fraktionen", url: "Kapitel8.html#8-2-fraktionen", keywords: ["fraktionen"] },
   { title: "8.3 Reiserouten", url: "Kapitel8.html#8-3-reiserouten", keywords: ["reiserouten"] },
