@@ -149,6 +149,27 @@ a:hover {
 body {
   padding-top: 120px; /* Menü + ausgeklappte Suche */
 }
+.suggestions {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+
 
 
 /* --- assistant: centralized menu styles --- */
