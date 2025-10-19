@@ -98,6 +98,48 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  // === 🧠 Autocomplete-Suche (Optimierte Version) ===
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("search-input");
+  if (searchInput) {
+    const suggestionBox = document.createElement("div");
+    suggestionBox.classList.add("search-suggestions"); // Präfix hinzugefügt
+    searchInput.parentNode.appendChild(suggestionBox);
+
+    searchInput.addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      suggestionBox.innerHTML = "";
+
+      if (query.length < 2) return;
+
+      const results = searchIndex.filter(item =>
+        item.title.toLowerCase().includes(query) ||
+        item.keywords.some(k => k.includes(query))
+      );
+
+      results.slice(0, 8).forEach(result => {
+        const option = document.createElement("div");
+        option.classList.add("search-suggestion-item"); // Präfix hinzugefügt
+        option.textContent = result.title;
+        option.onclick = () => (window.location.href = result.url);
+        suggestionBox.appendChild(option);
+      });
+    });
+
+    // Enter-Taste → erstes Ergebnis öffnen
+    searchInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const query = this.value.toLowerCase();
+        const first = searchIndex.find(item =>
+          item.title.toLowerCase().includes(query) ||
+          item.keywords.some(k => k.includes(query))
+        );
+        if (first) window.location.href = first.url;
+      }
+    });
+  }
+});
+
   const searchIndex = [
   // --- Kapitel 1 ---
   { title: "Kapitel 1 – Charaktererstellung", url: "Kapitel1.html#kapitel-1-charaktererstellung", keywords: ["charaktererstellung"] },
