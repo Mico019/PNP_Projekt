@@ -42,61 +42,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  function initSearch() {
-    const toggleSearchBtn = document.getElementById('toggle-search');
-    const searchSection = document.getElementById('search-section');
-    if (!toggleSearchBtn || !searchSection) return;
-
-    toggleSearchBtn.addEventListener('click', () => {
-      searchSection.classList.toggle('hidden');
-    });
-
-    const publicCodes = {
-      "kapitel1": "Kapitel1.html",
-      "glossar": "Glosar.html",
-      "tutorial5": "Beispiel5.html#special"
-    };
-
-
-
-    const secretCodes = {
-      "geheim01": "secret64zeichen01.html",
-      "gmstart": "GM-Panel.html"
-    };
-
-    const ADMIN_PASSWORD = "admin-super-code";
-    let isAdmin = false;
-    const searchForm = document.getElementById('site-search');
-    const searchInput = document.getElementById('searchInput');
-    const codeList = document.getElementById('code-list');
-    if (!searchForm || !searchInput || !codeList) return;
-
-    Object.keys(publicCodes).forEach(code => {
-      const div = document.createElement('div');
-      div.textContent = code;
-      div.classList.add('code-item');
-      codeList.appendChild(div);
-    });
-
-    searchForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const code = searchInput.value.trim().toLowerCase();
-      if (code === ADMIN_PASSWORD) {
-        isAdmin = true;
-        alert("✅ Admin-Modus aktiviert!");
-        searchInput.value = '';
-        return;
-      }
-      if (publicCodes[code]) {
-        window.location.href = publicCodes[code];
-      } else if (isAdmin && secretCodes[code]) {
-        window.location.href = secretCodes[code];
-      } else {
-        alert('❌ Ungültiger Code');
-      }
-      searchInput.value = '';
-    });
-  }
 
   // === 🧠 Autocomplete-Suche (Optimierte Version) ===
 document.addEventListener("DOMContentLoaded", function () {
