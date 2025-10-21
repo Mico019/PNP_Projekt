@@ -24,43 +24,49 @@
     </p>
 
     <div class="scrollbox">
-      <table class="xp-table">
-        <thead>
-          <tr>
-            <th>Level</th>
-            <th>XP_next (Spieler)</th>
-            <th>Gesamt-XP</th>
-            <th>Monster_XP</th>
-            <th>Kills ≈</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Diese Tabelle wurde mit den obigen Formeln berechnet -->
-          <!-- Ich zeige hier nur einen Teil, der Rest (bis 100) geht so weiter -->
-          <!-- Du kannst die Datei direkt auf deiner Website verwenden -->
-          <script>
-            // Dynamisch generiert die 100 Zeilen:
-            const table = document.currentScript.parentElement;
-            let total = 0;
-            for (let L = 1; L <= 100; L++) {
-              const xp = 50 * Math.pow(L, 2.25) * Math.log 2.5(L + 1);
-              const mxp =20 * Math.pow(L, 2.1) * Math.log 3(L + 1);
-              total += xp;
-              const kills = xp / mxp;
-              table.insertAdjacentHTML("beforeend", `
-                <tr>
-                  <td>${L}</td>
-                  <td>${Math.round(xp).toLocaleString("de-DE")}</td>
-                  <td>${Math.round(total).toLocaleString("de-DE")}</td>
-                  <td>${Math.round(mxp).toLocaleString("de-DE")}</td>
-                  <td>${Math.round(kills)}</td>
-                </tr>
-              `);
-            }
-          </script>
-        </tbody>
-      </table>
-    </div>
+  <table class="xp-table">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>XP_next (Spieler)</th>
+        <th>Gesamt-XP</th>
+        <th>Monster_XP</th>
+        <th>Kills ≈</th>
+      </tr>
+    </thead>
+    <tbody id="xp-body">
+      <!-- Dynamisch generiert -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const tbody = document.getElementById("xp-body");
+  let total = 0;
+
+  // Hilfsfunktion für Logarithmus mit beliebiger Basis
+  const logBase = (x, base) => Math.log(x) / Math.log(base);
+
+  for (let L = 1; L <= 100; L++) {
+    const xp = 50 * Math.pow(L, 2.25) * logBase(L + 1, 2.5);
+    const mxp = 20 * Math.pow(L, 2.1) * logBase(L + 1, 3);
+    total += xp;
+    const kills = xp / mxp;
+
+    tbody.insertAdjacentHTML(
+      "beforeend",
+      `
+      <tr>
+        <td>${L}</td>
+        <td>${Math.round(xp).toLocaleString("de-DE")}</td>
+        <td>${Math.round(total).toLocaleString("de-DE")}</td>
+        <td>${Math.round(mxp).toLocaleString("de-DE")}</td>
+        <td>${Math.round(kills)}</td>
+      </tr>
+      `
+    );
+  }
+</script>
 
     <p class="note">
       💡 <strong>Hinweis:</strong><br>
