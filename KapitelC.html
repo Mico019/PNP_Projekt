@@ -19,8 +19,8 @@
   <div class="container">
     <h3>Level- und Monster-XP-Tabelle (1–100)</h3>
     <p class="description">
-      <strong>Spieler-Formel:</strong> <code>XP_next = 50 × L<sup>1.5</sup> × log₂(L + 1)</code><br>
-      <strong>Monster-Formel:</strong> <code>Monster_XP = 20 × L<sup>1.25</sup> × log₂(L + 1)</code>
+      <strong>Spieler-Formel:</strong> <code>XP_next = 50 × L<sup>2.25</sup> × Log2.5(L + 1)</code><br>
+      <strong>Monster-Formel:</strong> <code>Monster_XP = 20 × L<sup>2.1</sup> × Log3(L + 1)</code>
     </p>
 
     <div class="scrollbox">
@@ -43,8 +43,8 @@
             const table = document.currentScript.parentElement;
             let total = 0;
             for (let L = 1; L <= 100; L++) {
-              const xp = 50 * Math.pow(L, 1.5) * Math.log2(L + 1);
-              const mxp =20 * Math.pow(L, 1.25) * Math.log2(L + 1);
+              const xp = 50 * Math.pow(L, 2.25) * Math.log2.5(L + 1);
+              const mxp =20 * Math.pow(L, 2.1) * Math.log3(L + 1);
               total += xp;
               const kills = xp / mxp;
               table.insertAdjacentHTML("beforeend", `
