@@ -43,8 +43,8 @@
             const table = document.currentScript.parentElement;
             let total = 0;
             for (let L = 1; L <= 100; L++) {
-              const xp = 50 * Math.pow(L, 2.25) * Math.log2.5(L + 1);
-              const mxp =20 * Math.pow(L, 2.1) * Math.log3(L + 1);
+              const xp = 50 * Math.pow(L, 2.25) * Math.log 2.5(L + 1);
+              const mxp =20 * Math.pow(L, 2.1) * Math.log 3(L + 1);
               total += xp;
               const kills = xp / mxp;
               table.insertAdjacentHTML("beforeend", `
