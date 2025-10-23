@@ -74,96 +74,139 @@
       Kills ≈ zeigt, wie viele gleichstarke Gegner man im Schnitt für ein Level-Up benötigt.
     </p>
   </div>
-<section id="xp-rechner">
-  <h3>Level-Up Rechner</h3>
+<section id="xp-rechner" aria-labelledby="xp-rechner-title">
+  <h3 id="xp-rechner-title">Level-Up Rechner</h3>
+
   <div class="xp-rechner-container">
     <div class="input-group">
       <label for="startLevel">Startlevel des Spielers:</label>
-      <input id="startLevel" type="number" value="1" min="1" max="100">
+      <input id="startLevel" type="number" value="1" min="1" max="100" />
     </div>
 
     <div id="monsterContainer">
       <label>Monstergruppen:</label>
       <div class="monster-row">
-        <input type="number" placeholder="Monster-Level" class="monster-level">
-        <input type="number" placeholder="Anzahl" class="monster-count">
+        <input type="number" placeholder="Monster-Level" class="monster-level" />
+        <input type="number" placeholder="Anzahl" class="monster-count" />
         <button class="delete-btn" title="Entfernen" onclick="removeMonsterRow(this)">❌</button>
       </div>
     </div>
 
-    <button class="add-btn" onclick="addMonsterRow()">➕ Monster hinzufügen</button>
-    <button class="calc-btn" onclick="calculateXP()">Berechnen</button>
+    <button type="button" class="add-btn" onclick="addMonsterRow()">➕ Monster hinzufügen</button>
+    <button type="button" class="calc-btn" onclick="calculateXP()">Berechnen</button>
 
-    <div id="result"></div>
+    <div id="result" role="status" aria-live="polite"></div>
   </div>
 
   <script>
-    // ==== Mathematische Hilfsfunktionen ====
-    function logBase(base, x) {
-      return Math.log(x) / Math.log(base);
-    }
-
-    function playerXPForLevel(L) {
-      return 38 * Math.pow(L, 2.25) * logBase(2.5, L + 1);
-    }
-
-    function monsterXP(L) {
-      return 12 * Math.pow(L, 2.1) * logBase(3, L + 1);
-    }
-
-    function totalXPForLevel(level) {
-      let total = 0;
-      for (let i = 1; i <= level; i++) {
-        total += playerXPForLevel(i);
+    // Wrappe alles in DOMContentLoaded, damit das Script erst läuft wenn die Elemente existieren.
+    document.addEventListener('DOMContentLoaded', function () {
+      // ==== Korrekte Log-Basis-Funktion ====
+      function logBase(x, base) {
+        return Math.log(x) / Math.log(base);
       }
-      return total;
-    }
 
-    // ==== Monster-Zeilenverwaltung ====
-    function addMonsterRow() {
-      const container = document.getElementById('monsterContainer');
-      const row = document.createElement('div');
-      row.className = 'monster-row';
-      row.innerHTML = `
-        <input type="number" placeholder="Monster-Level" class="monster-level">
-        <input type="number" placeholder="Anzahl" class="monster-count">
-        <button class="delete-btn" title="Entfernen" onclick="removeMonsterRow(this)">❌</button>
-      `;
-      container.appendChild(row);
-    }
+      // ==== XP-Formeln ====
+      function playerXPForLevel(L) {
+        return 38 * Math.pow(L, 2.25) * logBase(L + 1, 2.5);
+      }
 
-    function removeMonsterRow(button) {
-      const row = button.parentElement;
-      row.remove();
-    }
+      function monsterXP(L) {
+        return 12 * Math.pow(L, 2.1) * logBase(L + 1, 3);
+      }
 
-    // ==== XP-Berechnung ====
-    function calculateXP() {
-      const startLevel = parseInt(document.getElementById('startLevel').value);
-      const monsterRows = document.querySelectorAll('#xp-rechner .monster-row');
+      function totalXPForLevel(level) {
+        let total = 0;
+        for (let i = 1; i <= level; i++) {
+          total += playerXPForLevel(i);
+        }
+        return total;
+      }
 
-      let totalMonsterXP = 0;
-      monsterRows.forEach(row => {
-        const lvl = parseFloat(row.querySelector('.monster-level').value);
-        const count = parseInt(row.querySelector('.monster-count').value);
-        if (!isNaN(lvl) && !isNaN(count) && lvl > 0 && count > 0) {
-          totalMonsterXP += monsterXP(lvl) * count;
+      // ==== DOM-Funktionen ====
+      window.addMonsterRow = function () {
+        const container = document.getElementById('monsterContainer');
+        const row = document.createElement('div');
+        row.className = 'monster-row';
+        row.innerHTML = `
+          <input type="number" placeholder="Monster-Level" class="monster-level" />
+          <input type="number" placeholder="Anzahl" class="monster-count" />
+          <button class="delete-btn" title="Entfernen" onclick="removeMonsterRow(this)">❌</button>
+        `;
+        container.appendChild(row);
+      };
+
+      window.removeMonsterRow = function (button) {
+        const row = button && button.parentElement;
+        if (row && row.classList.contains('monster-row')) {
+          // Wenn die letzte Zeile entfernt werden soll, lieber Felder leeren als entfernen
+          const container = document.getElementById('monsterContainer');
+          const rows = container.querySelectorAll('.monster-row');
+          if (rows.length === 1) {
+            // nur Werte löschen, Zeile nicht komplett entfernen (so bleibt immer ein Eingabefeld)
+            rows[0].querySelectorAll('input').forEach(i => i.value = '');
+            return;
+          }
+          row.remove();
+        }
+      };
+
+      window.calculateXP = function () {
+        const startLevelInput = document.getElementById('startLevel');
+        const startLevel = parseInt(startLevelInput.value, 10);
+        if (isNaN(startLevel) || startLevel < 1) {
+          document.getElementById('result').innerText = 'Bitte ein gültiges Startlevel (1–100) eingeben.';
+          return;
+        }
+
+        const monsterRows = document.querySelectorAll('#xp-rechner .monster-row');
+        let totalMonsterXP = 0;
+        let anyValid = false;
+
+        monsterRows.forEach(row => {
+          const lvlInput = row.querySelector('.monster-level');
+          const countInput = row.querySelector('.monster-count');
+          const lvl = parseFloat(lvlInput.value);
+          const count = parseFloat(countInput.value);
+
+          // nur gültige und positive Werte zählen
+          if (!isNaN(lvl) && !isNaN(count) && lvl > 0 && count > 0) {
+            totalMonsterXP += monsterXP(lvl) * count;
+            anyValid = true;
+          }
+        });
+
+        if (!anyValid) {
+          document.getElementById('result').innerText = 'Bitte trage mindestens eine Monstergruppe mit gültigem Level und Anzahl ein.';
+          return;
+        }
+
+        const startXP = totalXPForLevel(startLevel);
+        let newLevel = startLevel;
+
+        // Schutz gegen Endlosschleifen: Level cap bei 100
+        while (newLevel < 100 && totalXPForLevel(newLevel + 1) <= startXP + totalMonsterXP) {
+          newLevel++;
+        }
+
+        const gainedLevels = newLevel - startLevel;
+
+        document.getElementById('result').innerHTML =
+          `🪄 Erhaltene XP: <strong>${Math.round(totalMonsterXP).toLocaleString('de-DE')}</strong><br>` +
+          `➡️ Neues Level: <strong>${newLevel}</strong> ( +${gainedLevels} Level${gainedLevels !== 1 ? 's' : ''} )`;
+      };
+
+      // optional: verhindern, dass Enter ein Formular absendet und die Seite refreshed
+      document.getElementById('xp-rechner').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          const target = e.target;
+          if (target && (target.classList.contains('monster-level') || target.classList.contains('monster-count') || target.id === 'startLevel')) {
+            e.preventDefault();
+            calculateXP();
+          }
         }
       });
-
-      const startXP = totalXPForLevel(startLevel);
-      let newLevel = startLevel;
-
-      while (totalXPForLevel(newLevel + 1) <= startXP + totalMonsterXP && newLevel < 100) {
-        newLevel++;
-      }
-
-      const gainedLevels = newLevel - startLevel;
-
-      document.getElementById('result').innerHTML =
-        `🪄 Erhaltene XP: <strong>${Math.round(totalMonsterXP).toLocaleString("de-DE")}</strong><br>` +
-        `➡️ Neues Level: <strong>${newLevel}</strong> ( +${gainedLevels} Level${gainedLevels !== 1 ? 's' : ''} )`;
-    }
+    });
   </script>
 </section>
 <h3>VL UP Belonungen:</h3>
