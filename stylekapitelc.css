@@ -110,3 +110,112 @@ code {
   .xp-table th, .xp-table td { font-size: 0.85rem; }
   h1 { font-size: 1.4rem; }
 }
+
+/* ===============================
+   XP-Rechner Styling (isoliert)
+   =============================== */
+#xp-rechner {
+  margin-top: 40px;
+  padding: 20px;
+  background: rgba(30, 30, 30, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  max-width: 500px;
+}
+
+#xp-rechner h3 {
+  margin-top: 0;
+  text-align: center;
+  color: #ffd700;
+}
+
+#xp-rechner .xp-rechner-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#xp-rechner label {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+#xp-rechner input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: #fff;
+  font-size: 14px;
+}
+
+#xp-rechner input::placeholder {
+  color: #aaa;
+}
+
+#xp-rechner .monster-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+#xp-rechner .monster-row input {
+  flex: 1;
+}
+
+#xp-rechner .delete-btn {
+  background: #aa1a1a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#xp-rechner .delete-btn:hover {
+  background: #cc2929;
+}
+
+#xp-rechner .add-btn,
+#xp-rechner .calc-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#xp-rechner .add-btn {
+  background-color: #444;
+  color: white;
+}
+
+#xp-rechner .add-btn:hover {
+  background-color: #555;
+}
+
+#xp-rechner .calc-btn {
+  background-color: #4a63e7;
+  color: white;
+}
+
+#xp-rechner .calc-btn:hover {
+  background-color: #5b74ff;
+}
+
+#xp-rechner #result {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #fff;
+}
