@@ -74,6 +74,106 @@
       Kills ≈ zeigt, wie viele gleichstarke Gegner man im Schnitt für ein Level-Up benötigt.
     </p>
   </div>
+<script src="https://cdn.tailwindcss.com"></script>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-6">
+
+  <h1 class="text-3xl font-bold mb-6">🧙‍♂️ PNP Level-Up Rechner</h1>
+
+  <div class="bg-gray-800 p-6 rounded-2xl shadow-lg w-full max-w-lg space-y-4">
+
+    <!-- Startlevel -->
+    <div>
+      <label class="block text-sm font-semibold mb-1">Startlevel des Spielers:</label>
+      <input id="startLevel" type="number" value="1" min="1" max="100"
+             class="w-full p-2 rounded bg-gray-700 text-white">
+    </div>
+
+    <!-- Dynamische Monsterliste -->
+    <div id="monsterContainer" class="space-y-2">
+      <label class="block text-sm font-semibold mb-1">Monstergruppen:</label>
+      <div class="flex space-x-2 monster-row">
+        <input type="number" placeholder="Monster-Level" class="monster-level w-1/2 p-2 rounded bg-gray-700 text-white">
+        <input type="number" placeholder="Anzahl" class="monster-count w-1/2 p-2 rounded bg-gray-700 text-white">
+      </div>
+    </div>
+
+    <!-- Button: Monster hinzufügen -->
+    <button onclick="addMonsterRow()" class="bg-gray-600 hover:bg-gray-500 w-full py-2 rounded-xl font-semibold mt-2">
+      ➕ Monster hinzufügen
+    </button>
+
+    <!-- Berechnen -->
+    <button onclick="calculateXP()" class="bg-indigo-600 hover:bg-indigo-500 w-full py-2 rounded-xl font-semibold">
+      Berechnen
+    </button>
+
+    <!-- Ergebnis -->
+    <div id="result" class="mt-4 text-lg font-semibold text-center"></div>
+  </div>
+
+  <script>
+    // Mathematische Hilfsfunktionen
+    function logBase(base, x) {
+      return Math.log(x) / Math.log(base);
+    }
+
+    function playerXPForLevel(L) {
+      return 38 * Math.pow(L, 2.25) * logBase(2.5, L + 1);
+    }
+
+    function monsterXP(L) {
+      return 12 * Math.pow(L, 2.1) * logBase(3, L + 1);
+    }
+
+    function totalXPForLevel(level) {
+      let total = 0;
+      for (let i = 1; i <= level; i++) {
+        total += playerXPForLevel(i);
+      }
+      return total;
+    }
+
+    // Neue Monster-Zeile hinzufügen
+    function addMonsterRow() {
+      const container = document.getElementById('monsterContainer');
+      const row = document.createElement('div');
+      row.className = 'flex space-x-2 monster-row';
+      row.innerHTML = `
+        <input type="number" placeholder="Monster-Level" class="monster-level w-1/2 p-2 rounded bg-gray-700 text-white">
+        <input type="number" placeholder="Anzahl" class="monster-count w-1/2 p-2 rounded bg-gray-700 text-white">
+      `;
+      container.appendChild(row);
+    }
+
+    // XP berechnen
+    function calculateXP() {
+      const startLevel = parseInt(document.getElementById('startLevel').value);
+      const monsterRows = document.querySelectorAll('.monster-row');
+
+      let totalMonsterXP = 0;
+      monsterRows.forEach(row => {
+        const lvl = parseFloat(row.querySelector('.monster-level').value);
+        const count = parseInt(row.querySelector('.monster-count').value);
+        if (!isNaN(lvl) && !isNaN(count) && lvl > 0 && count > 0) {
+          totalMonsterXP += monsterXP(lvl) * count;
+        }
+      });
+
+      const startXP = totalXPForLevel(startLevel);
+      let newLevel = startLevel;
+
+      while (totalXPForLevel(newLevel + 1) <= startXP + totalMonsterXP) {
+        newLevel++;
+        if (newLevel >= 100) break; // Cap bei Level 100
+      }
+
+      const gainedLevels = newLevel - startLevel;
+
+      document.getElementById('result').innerHTML =
+        `🪄 Erhaltene XP: <strong>${totalMonsterXP.toFixed(0)}</strong><br>` +
+        `➡️ Neues Level: <strong>${newLevel}</strong> ( +${gainedLevels} Level${gainedLevels !== 1 ? 's' : ''} )`;
+    }
+  </script>
 
 <h3>VL UP Belonungen:</h3>
 <li>+2 Attributspunkte frei verteilen</li>
